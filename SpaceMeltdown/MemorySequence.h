@@ -41,8 +41,9 @@ private:
   static const uint8_t  START_LEN   = 3;   // sequence length for round 1
 
   void     startRound(uint8_t round);
+  void     showStep(uint8_t idx);    // display sequence step on 7-seg
   void     lcdStatus(const char* line0, const char* line1);
-  uint8_t  readNewPress();   // returns bitmask of newly pressed buttons
+  uint8_t  readNewPress();
   void     successTone();
   void     failTone();
 };

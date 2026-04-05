@@ -5,7 +5,7 @@ MemorySequence::MemorySequence(LiquidCrystal_I2C& lcd, TM1638plus& tm)
   : _lcd(lcd), _tm(tm),
     _state(State::SHOWING_ON),
     _seqLen(0), _showIdx(0), _inputIdx(0),
-    _stateMs(0), _showOnMs(600), _showOffMs(300),
+    _stateMs(0), _showOnMs(700), _showOffMs(350),
     _pauseStart(0), _prevButtons(0), _lastBtnRead(0)
 {
   memset(_sequence, 0, sizeof(_sequence));
@@ -26,30 +26,27 @@ bool MemorySequence::update() {
 
   switch (_state) {
 
-    // ---- Show one LED of the sequence ----
+    // ---- Show one number of the sequence on 7-seg ----
     case State::SHOWING_ON:
       if (now - _stateMs >= _showOnMs) {
-        _tm.setLEDs(0x00);   // turn off
+        _tm.displayText("        ");   // blank between steps
         _stateMs = now;
         _state = State::SHOWING_OFF;
-      } else {
-        _tm.setLEDs(1 << _sequence[_showIdx]);
       }
       break;
 
-    // ---- Gap between LEDs ----
+    // ---- Blank gap between numbers ----
     case State::SHOWING_OFF:
       if (now - _stateMs >= _showOffMs) {
         _showIdx++;
         if (_showIdx >= _seqLen) {
           // Whole sequence shown — player's turn
-          _tm.setLEDs(0x00);
-          _inputIdx = 0;
           lcdStatus("Memory Seq", "-> Your turn!");
           _tm.displayText("GO!     ");
+          _inputIdx = 0;
           _state = State::PLAYER_TURN;
         } else {
-          _tm.setLEDs(1 << _sequence[_showIdx]);
+          showStep(_showIdx);
           _stateMs = now;
           _state = State::SHOWING_ON;
         }
@@ -61,37 +58,45 @@ bool MemorySequence::update() {
       uint8_t pressed = readNewPress();
       if (!pressed) break;
 
-      // Which button was pressed? (lowest set bit)
+      // Which button index (0-7)?
       uint8_t btn = 0;
       for (uint8_t i = 0; i < 8; i++) {
         if (pressed & (1 << i)) { btn = i; break; }
       }
 
-      // Flash the pressed LED as feedback
-      _tm.setLEDs(1 << btn);
+      // Show pressed number as feedback on 7-seg
+      char fb[9];
+      snprintf(fb, sizeof(fb), "  [%d]   ", btn + 1);
+      _tm.displayText(fb);
       tone(BUZZER_PIN, 400 + btn * 80, 80);
-      delay(80);
-      _tm.setLEDs(0x00);
+      delay(120);
 
       if (btn == _sequence[_inputIdx]) {
         _inputIdx++;
 
-        // Update LCD progress
         char buf[17];
         snprintf(buf, sizeof(buf), "%d / %d correct", _inputIdx, _seqLen);
         lcdStatus("Memory Seq", buf);
 
         if (_inputIdx >= _seqLen) {
-          // Round complete
           successTone();
+          _tm.displayText("NICE!   ");
           _pauseStart = millis();
           _state = State::ROUND_WIN;
+        } else {
+          // Show next expected index hint on 7-seg
+          snprintf(fb, sizeof(fb), "%d/%d     ", _inputIdx + 1, _seqLen);
+          _tm.displayText(fb);
         }
       } else {
-        // Wrong button
-        lcdStatus("WRONG!", "Press RESET");
+        // Wrong — show what was expected
+        char buf[17];
+        snprintf(buf, sizeof(buf), "Wanted btn %d", _sequence[_inputIdx] + 1);
+        lcdStatus("WRONG!", buf);
+        char seg[9];
+        snprintf(seg, sizeof(seg), "ERR  %d  ", _sequence[_inputIdx] + 1);
+        _tm.displayText(seg);
         failTone();
-        _tm.setLEDs(0xFF);
         _state = State::FAILED;
       }
       break;
@@ -99,9 +104,9 @@ bool MemorySequence::update() {
 
     // ---- Brief pause then next round ----
     case State::ROUND_WIN:
-      if (now - _pauseStart >= 1000) {
+      if (now - _pauseStart >= 1200) {
         uint8_t nextRound = _seqLen - START_LEN + 1;
-        if (nextRound >= ROUNDS) return true;   // all rounds done
+        if (nextRound >= ROUNDS) return true;
         startRound(nextRound);
       }
       break;
@@ -127,16 +132,13 @@ void MemorySequence::startRound(uint8_t round) {
   _showIdx  = 0;
   _inputIdx = 0;
 
-  // Speed increases each round
-  _showOnMs  = max(200UL, 600UL - round * 80UL);
-  _showOffMs = max(100UL, 300UL - round * 40UL);
+  _showOnMs  = max(200UL, 700UL - round * 90UL);
+  _showOffMs = max(100UL, 350UL - round * 45UL);
 
-  // Generate new sequence
   for (uint8_t i = 0; i < _seqLen; i++) {
     _sequence[i] = random(0, 8);
   }
 
-  // Show round intro on LCD + 7-seg
   char buf[17];
   snprintf(buf, sizeof(buf), "Round %d / %d", round + 1, ROUNDS);
   lcdStatus("Memory Seq", buf);
@@ -145,13 +147,20 @@ void MemorySequence::startRound(uint8_t round) {
   _tm.displayText(seg);
   delay(800);
 
-  lcdStatus("Memory Seq", "Watch!");
+  lcdStatus("Memory Seq", "Watch & remember");
   _tm.displayText("WATCH   ");
+  delay(600);
 
-  _tm.setLEDs(0x00);
+  showStep(0);
   _stateMs = millis();
   _state   = State::SHOWING_ON;
-  _tm.setLEDs(1 << _sequence[0]);
+}
+
+void MemorySequence::showStep(uint8_t idx) {
+  // Show button number (1-based) centered on 7-segment
+  char seg[9];
+  snprintf(seg, sizeof(seg), "  -%d-   ", _sequence[idx] + 1);
+  _tm.displayText(seg);
 }
 
 // ---------------------------------------------------------------------------
