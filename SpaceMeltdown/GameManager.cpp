@@ -71,8 +71,7 @@ void GameManager::update() {
         break;
       }
 
-      showHUD();
-
+      // Challenge owns the full display during RUNNING state
       Challenge* c = _challenges[_currentIndex];
       if (c && c->update()) {
         _transitionStartMs = millis();
