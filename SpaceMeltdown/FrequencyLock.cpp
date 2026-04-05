@@ -90,13 +90,24 @@ bool FrequencyLock::update() {
       if (now - _lastLcd >= 120) {
         _lastLcd = now;
         char buf[17];
-        snprintf(buf, sizeof(buf), "R%d T:%d", _round + 1, _target);
+
+        // Line 0: round + target + seconds left in round
+        int secsLeft = (int)((ROUND_TIMEOUT_MS - (now - _roundStartMs)) / 1000UL);
+        snprintf(buf, sizeof(buf), "R%d T:%-4d  :%02d", _round + 1, _target, secsLeft);
         printLine(0, buf);
+
+        // Line 1: proximity bar (8 segs) + hold %
+        int closeness = map(constrain(diff, 0, 500), 500, 0, 0, 8);
         int pct = (_inTolStart != 0)
           ? (int)(((now - _inTolStart) * 100UL) / HOLD_MS[_round])
           : 0;
         if (pct > 99) pct = 99;
-        snprintf(buf, sizeof(buf), "N%d D%d %d%%", current, diff, pct);
+        char bar[11];
+        bar[0] = '[';
+        for (int i = 0; i < 8; i++) bar[i + 1] = (i < closeness) ? '|' : ' ';
+        bar[9] = ']';
+        bar[10] = '\0';
+        snprintf(buf, sizeof(buf), "%s %3d%%", bar, pct);
         printLine(1, buf);
       }
       return false;
