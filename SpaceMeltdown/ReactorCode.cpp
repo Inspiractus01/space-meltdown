@@ -1,8 +1,8 @@
 #include "ReactorCode.h"
 #include "Config.h"
 
-const uint8_t      ReactorCode::CODES_PER_ROUND[ROUNDS] = { 2, 3, 4 };
-const unsigned long ReactorCode::SHOW_TIME[ROUNDS]       = { 4000, 3000, 2000 };
+const uint8_t      ReactorCode::CODES_PER_ROUND[ROUNDS] = { 2, 3, 4, 5 };
+const unsigned long ReactorCode::SHOW_TIME[ROUNDS]       = { 4000, 3000, 2000, 1500 };
 
 // ---------------------------------------------------------------------------
 

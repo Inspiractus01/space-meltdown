@@ -35,7 +35,7 @@ private:
   uint8_t _prevButtons;
   unsigned long _lastBtnRead;
 
-  static const uint8_t ROUNDS = 3;
+  static const uint8_t ROUNDS = 4;
   static const uint8_t CODES_PER_ROUND[ROUNDS];
   static const unsigned long SHOW_TIME[ROUNDS];
 

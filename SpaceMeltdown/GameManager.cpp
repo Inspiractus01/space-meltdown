@@ -57,7 +57,7 @@ void GameManager::update() {
       if (startPressed) {
         startPressed = false;
         _gameStartMs = millis();
-        startChallenge(1); // TODO: change back to 0 before final submission
+        startChallenge(2); // TODO: change back to 0 before final submission
       }
       break;
 
