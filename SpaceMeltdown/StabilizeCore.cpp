@@ -1,9 +1,3 @@
-// =============================================================================
-// StabilizeCore.cpp
-// Space Station Meltdown
-// Author: Michal Mucha <michalmucha@proton.me>
-// =============================================================================
-
 #include "StabilizeCore.h"
 #include "Config.h"
 

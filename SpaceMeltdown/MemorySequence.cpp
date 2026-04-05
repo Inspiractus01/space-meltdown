@@ -1,9 +1,3 @@
-// =============================================================================
-// MemorySequence.cpp
-// Space Station Meltdown
-// Author: Michal Mucha <michalmucha@proton.me>
-// =============================================================================
-
 #include "MemorySequence.h"
 
 MemorySequence::MemorySequence() {}

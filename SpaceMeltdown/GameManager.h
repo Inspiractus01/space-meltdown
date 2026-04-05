@@ -1,9 +1,3 @@
-// =============================================================================
-// GameManager.h — Orchestrates the overall game flow
-// Space Station Meltdown
-// Author: Michal Mucha <michalmucha@proton.me>
-// =============================================================================
-
 #pragma once
 
 #include "Challenge.h"

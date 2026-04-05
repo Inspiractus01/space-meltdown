@@ -1,10 +1,7 @@
-// =============================================================================
-// FrequencyLock.h — Challenge 1: Frequency Lock
-// Turn the potentiometer to match a target frequency shown on the LCD.
-// Buzzer beeps faster the closer you get. 3 rounds, tolerance tightens.
-// Space Station Meltdown
-// Author: Michal Mucha <michalmucha@proton.me>
-// =============================================================================
+// Challenge 1 — Frequency Lock
+// The reactor antenna is drifting. Turn the potentiometer until the beeping
+// goes solid — that means you've locked onto the right frequency.
+// Hold it steady for a few seconds to stabilise. 3 rounds, gets tighter each time.
 
 #pragma once
 

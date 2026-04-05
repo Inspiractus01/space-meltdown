@@ -1,9 +1,3 @@
-// =============================================================================
-// FrequencyLock.cpp — Challenge 1: Frequency Lock
-// Space Station Meltdown
-// Author: Michal Mucha <michalmucha@proton.me>
-// =============================================================================
-
 #include "FrequencyLock.h"
 #include "Config.h"
 

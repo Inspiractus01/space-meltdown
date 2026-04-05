@@ -1,9 +1,3 @@
-// =============================================================================
-// Config.h — Pin definitions and global constants
-// Space Station Meltdown
-// Author: Michal Mucha <michalmucha@proton.me>
-// =============================================================================
-
 #pragma once
 
 // --- LCD (I2C backpack: GND, VCC, SDA=D14, SCL=D15) ---

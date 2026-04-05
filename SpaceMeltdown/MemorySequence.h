@@ -1,9 +1,6 @@
-// =============================================================================
-// MemorySequence.h — Challenge 2: Memory Sequence (Simon Says)
-// LEDs flash a sequence; repeat it using the buttons. Gets longer and faster.
-// Space Station Meltdown
-// Author: Michal Mucha <michalmucha@proton.me>
-// =============================================================================
+// Challenge 2 — Memory Sequence
+// The comms array needs recalibrating. Watch the LED pattern and repeat it
+// using the buttons. Each round adds one more step and speeds up.
 
 #pragma once
 
@@ -13,8 +10,8 @@ class MemorySequence : public Challenge {
 public:
   MemorySequence();
 
-  void begin()    override;
-  bool update()   override;
+  void begin()      override;
+  bool update()     override;
   void onGameOver() override;
 
 private:

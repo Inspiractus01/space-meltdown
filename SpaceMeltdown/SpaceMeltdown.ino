@@ -1,8 +1,4 @@
-// =============================================================================
-// SpaceMeltdown.ino — Entry point
-// Space Station Meltdown — Embedded Programming Project
-// Author: Michal Mucha <michalmucha@proton.me>
-// =============================================================================
+// Space Station Meltdown — Embedded escape room on Nucleo F303RE
 
 #include "GameManager.h"
 

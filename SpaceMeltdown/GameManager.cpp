@@ -1,9 +1,3 @@
-// =============================================================================
-// GameManager.cpp
-// Space Station Meltdown
-// Author: Michal Mucha <michalmucha@proton.me>
-// =============================================================================
-
 #include "GameManager.h"
 #include "FrequencyLock.h"
 // #include "MemorySequence.h"
