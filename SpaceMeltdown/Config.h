@@ -6,7 +6,7 @@
 
 #pragma once
 
-// --- LCD (I2C) ---
+// --- LCD (I2C backpack: GND, VCC, SDA=D14, SCL=D15) ---
 #define LCD_I2C_ADDR  0x27
 #define LCD_COLS      16
 #define LCD_ROWS       2
@@ -20,7 +20,7 @@
 #define POT_PIN       A0
 
 // --- Passive Buzzer ---
-#define BUZZER_PIN    6
+#define BUZZER_PIN    D6
 
 // --- Discrete LEDs ---
 #define LED_RED_PIN   3
@@ -33,7 +33,7 @@
 #define RGB_B_PIN    12
 
 // --- Push buttons (external) ---
-#define BTN_PIN       2   // spare external button
+#define BTN_PIN       2
 
 // --- USER button on Nucleo ---
 #define USER_BTN_PIN  PC13

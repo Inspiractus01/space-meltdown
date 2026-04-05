@@ -1,7 +1,7 @@
 // =============================================================================
 // FrequencyLock.h — Challenge 1: Frequency Lock
 // Turn the potentiometer to match a target frequency shown on the LCD.
-// The buzzer beeps faster the closer you get. 3 rounds, tolerance tightens.
+// Buzzer beeps faster the closer you get. 3 rounds, tolerance tightens.
 // Space Station Meltdown
 // Author: Michal Mucha <michalmucha@proton.me>
 // =============================================================================
@@ -15,12 +15,33 @@ class FrequencyLock : public Challenge {
 public:
   explicit FrequencyLock(LiquidCrystal_I2C& lcd);
 
-  void begin()    override;
-  bool update()   override;
+  void begin()      override;
+  bool update()     override;
   void onGameOver() override;
 
 private:
-  LiquidCrystal_I2C& _lcd;
+  enum class State { PLAYING, ROUND_WIN, FAILED };
 
-  // TODO: implement
+  LiquidCrystal_I2C& _lcd;
+  State         _state;
+  uint8_t       _round;
+  int           _target;
+  unsigned long _roundStartMs;
+  unsigned long _inTolStart;
+  unsigned long _lastBeep;
+  unsigned long _lastLcd;
+  unsigned long _pauseStart;
+
+  static const int          ROUND_COUNT       = 3;
+  static const int          FREQ_MIN          = 120;
+  static const int          FREQ_MAX          = 1200;
+  static const unsigned long ROUND_TIMEOUT_MS = 30000UL;
+  static const int          TOLERANCE[3];
+  static const unsigned long HOLD_MS[3];
+
+  void startRound(uint8_t r);
+  int  potToHz(int raw);
+  void printLine(uint8_t row, const char* text);
+  void successTone();
+  void failTone();
 };
