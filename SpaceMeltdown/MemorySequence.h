@@ -37,7 +37,7 @@ private:
   uint8_t _prevButtons;        // for edge detection / debounce
   unsigned long _lastBtnRead;
 
-  static const uint8_t  ROUNDS      = 5;   // total rounds
+  static const uint8_t  ROUNDS      = 3;   // total rounds
   static const uint8_t  START_LEN   = 3;   // sequence length for round 1
 
   void     startRound(uint8_t round);

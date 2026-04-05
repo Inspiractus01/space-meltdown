@@ -1,7 +1,7 @@
 #include "GameManager.h"
 #include "FrequencyLock.h"
 #include "MemorySequence.h"
-// #include "ReactorCode.h"
+#include "ReactorCode.h"
 // #include "StabilizeCore.h"
 
 #include <Wire.h>
@@ -24,7 +24,7 @@ GameManager::GameManager()
 {
   _challenges[0] = new FrequencyLock(lcd);
   _challenges[1] = new MemorySequence(lcd, tm);
-  _challenges[2] = nullptr; // new ReactorCode(lcd)
+  _challenges[2] = new ReactorCode(lcd, tm);
   _challenges[3] = nullptr; // new StabilizeCore(lcd)
 }
 
@@ -57,7 +57,7 @@ void GameManager::update() {
       if (startPressed) {
         startPressed = false;
         _gameStartMs = millis();
-        startChallenge(0);
+        startChallenge(1); // TODO: change back to 0 before final submission
       }
       break;
 
