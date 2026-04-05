@@ -1,13 +1,15 @@
 #include "GameManager.h"
 #include "FrequencyLock.h"
-// #include "MemorySequence.h"
+#include "MemorySequence.h"
 // #include "ReactorCode.h"
 // #include "StabilizeCore.h"
 
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include <TM1638plus.h>
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
+TM1638plus        tm(TM_STB_PIN, TM_CLK_PIN, TM_DIO_PIN, false);
 
 volatile bool startPressed = false;
 void onStartBtn() { startPressed = true; }
@@ -21,7 +23,7 @@ GameManager::GameManager()
     _transitionStartMs(0)
 {
   _challenges[0] = new FrequencyLock(lcd);
-  _challenges[1] = nullptr; // new MemorySequence()
+  _challenges[1] = new MemorySequence(lcd, tm);
   _challenges[2] = nullptr; // new ReactorCode(lcd)
   _challenges[3] = nullptr; // new StabilizeCore(lcd)
 }
@@ -35,6 +37,7 @@ void GameManager::begin() {
   Wire.begin();
   lcd.init();
   lcd.backlight();
+  tm.displayBegin();
 
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(LED_GREEN_PIN, OUTPUT);
